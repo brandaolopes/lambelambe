@@ -11,7 +11,6 @@ import {
     Platform,
     Alert,
     TextInput,
-    Pressable,
 } from 'react-native';
 
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -29,13 +28,13 @@ const styles = StyleSheet.create({
     },
     imageContainer: {
         width: '90%',
-        height: Dimensions.get('window').height * 3 / 4,
+        height: Dimensions.get('window').height / 2,
         backgroundColor: '#eee',
         marginTop: 10,
     },
     image: {
-        width: Dimensions.get('window').width,
-        height: Dimensions.get('window').height * 3 / 4,
+        width: '100%',
+        height: Dimensions.get('window').height / 2,
         resizeMode: 'center',
     },
     button: {
@@ -54,59 +53,67 @@ const styles = StyleSheet.create({
     },
 });
 
-const actions = [
-    {
-      title: 'Take Image',
-      type: 'capture',
-      options: {
-        saveToPhotos: true,
-        mediaType: 'photo',
-        includeBase64: false,
-      },
-    },
-    {
-      title: 'Select Image',
-      type: 'library',
-      options: {
-        selectionLimit: 0,
-        mediaType: 'photo',
-        includeBase64: false,
-      },
-    },
-    {
-      title: 'Take Video',
-      type: 'capture',
-      options: {
-        saveToPhotos: true,
-        mediaType: 'video',
-      },
-    },
-    {
-      title: 'Select Video',
-      type: 'library',
-      options: {
-        selectionLimit: 0,
-        mediaType: 'video',
-      },
-    },
-    {
-      title: `Select Image or Video\n(mixed)`,
-      type: 'library',
-      options: {
-        selectionLimit: 0,
-        mediaType: 'mixed',
-      },
-    },
-  ];
+
 
 const AddPhoto = () => {
     const [image, setImage] = useState(null);
     const [comment, setComment] = useState('');
     const [response, setResponse] = useState(null);
 
+    const pickImageFromGallery = async () => {
+
+      const options = {
+        mediaType: 'photo',
+      };
+
+      const result = await launchImageLibrary(options);
+
+      if (result?.assets) {
+        setResponse(result);
+      }
+      //tratar o erro depois
+    };
+
+
+    const pickImageFromCamera = async () => {
+
+      const options = {
+        mediaType: 'photo',
+        saveToPhotos: true,
+        cameraType: 'front',
+        quality: 1,
+      };
+
+      const result = await launchCamera(options);
+
+      if (result?.assets) {
+        setResponse(result);
+      }
+      //tratar o erro depois
+    };
+
     const onButtonPress = () => {
-      
-    }
+      Alert.alert(
+        'Selecione', 
+        'Informe de onde você quer pegar a foto', 
+        [
+          {
+            text: 'Galeria',
+            onPress: () => pickImageFromGallery(),
+            style: 'default',
+          },
+          {
+            text: 'Câmera',
+            onPress: () => pickImageFromCamera(),
+            style: 'default',
+          },
+        ],
+        {
+          cancelable: true,
+          onDismiss: () => console.log('tratar depois...'),
+        }
+        );
+    };
 
     
 
