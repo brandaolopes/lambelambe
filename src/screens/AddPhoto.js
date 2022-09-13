@@ -94,8 +94,8 @@ const AddPhoto = () => {
 
     const onButtonPress = () => {
       Alert.alert(
-        'Selecione', 
-        'Informe de onde você quer pegar a foto', 
+        'Selecione',
+        'Informe de onde você quer pegar a foto',
         [
           {
             text: 'Galeria',
